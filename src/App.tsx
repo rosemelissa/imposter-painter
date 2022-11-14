@@ -10,7 +10,7 @@ function App(): JSX.Element {
   >("home");
   return (
     <>
-      {page === "home" && <Home />}
+      {page === "home" && <Home setPage={setPage}/>}
       {page === "join-game" && <JoinGame />}
       {page === "new-game" && <NewGame />}
       {page === "gameplay" && <Gameplay />}
