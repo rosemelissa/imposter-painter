@@ -1,6 +1,10 @@
 import { useState } from "react";
 
-export default function NewGame(): JSX.Element {
+interface INewGameProps {
+  setLoading: React.Dispatch<React.SetStateAction<boolean>>;
+}
+
+export default function NewGame({setLoading}: INewGameProps): JSX.Element {
   const [username, setUsername] = useState<string>("");
   return (
     <>

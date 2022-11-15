@@ -1,16 +1,36 @@
 import { useState } from "react";
 
-export default function JoinGame(): JSX.Element {
+interface IJoinGameProps {
+  setLoading: React.Dispatch<React.SetStateAction<boolean>>;
+}
+
+export default function JoinGame({setLoading}: IJoinGameProps): JSX.Element {
   const [userGameCodeInput, setUserGameCodeInput] = useState<string>("");
-  return (
-    <>
-      <h1>JoinGame</h1>
-      <p>Enter game code:</p>
-      <input
-        value={userGameCodeInput}
-        onChange={(e) => setUserGameCodeInput(e.target.value)}
-      />
-      <button disabled={userGameCodeInput.length === 0}>Submit</button>
-    </>
-  );
+  const [username, setUsername] = useState<string>('');
+  const [mode, setMode] = useState<'enter-game-code'|'enter-username'>('enter-game-code');
+  if (mode === 'enter-game-code') {
+    return (
+      <>
+        <h1>JoinGame</h1>
+        <p>Enter game code:</p>
+        <input
+          value={userGameCodeInput}
+          onChange={(e) => setUserGameCodeInput(e.target.value)}
+        />
+        <button disabled={userGameCodeInput.length === 0}>Submit</button>
+      </>
+    );
+  } else {
+    return (
+      <>
+        <h1>JoinGame</h1>
+        <p>Enter username:</p>
+        <input
+          value={username}
+          onChange={(e) => setUsername(e.target.value)}
+        />
+        <button disabled={username.length === 0}>Submit</button>
+      </>
+    )
+  }
 }
