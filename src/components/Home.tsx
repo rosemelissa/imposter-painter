@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { socket} from "../App";
+import { socket } from "../App";
 
 interface IHomeProps {
   setPage: React.Dispatch<
@@ -13,7 +13,15 @@ interface IHomeProps {
   setLoading: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-export default function Home({ setPage, username, setUsername, generatedID, setGeneratedID, setRoomNumber, setLoading }: IHomeProps): JSX.Element {
+export default function Home({
+  setPage,
+  username,
+  setUsername,
+  generatedID,
+  setGeneratedID,
+  setRoomNumber,
+  setLoading,
+}: IHomeProps): JSX.Element {
   const [connectedToSocket, setConnectedToSocket] = useState<boolean>(false);
 
   useEffect(() => {
@@ -25,7 +33,7 @@ export default function Home({ setPage, username, setUsername, generatedID, setG
     socket.on("new game created", (roomNumber) => {
       setRoomNumber(roomNumber);
       setLoading(false);
-      setPage('gameplay')
+      setPage("gameplay");
     });
     // return () => {
     //   socket.off("messages updated");
@@ -35,28 +43,37 @@ export default function Home({ setPage, username, setUsername, generatedID, setG
   const handleSubmitUsername = async () => {
     setLoading(true);
     socket.emit("new user", username);
-  }
+  };
 
   const handleCreateNewGame = () => {
     setLoading(true);
-    socket.emit("new game", username, generatedID)
-  }
+    socket.emit("new game", username, generatedID);
+  };
 
   return (
     <>
       <h1>Home</h1>
-      {connectedToSocket ? 
-      <>
-      <p>Hi {username}!</p>
-      <button onClick={() => setPage("join-game")}>Join game</button>
-      <button onClick={handleCreateNewGame}>New game</button>
-      </>:
-      <>
-      <p>Enter your name:</p>
-      <input value={username} onChange={(e) => setUsername(e.target.value)} />
-      <button disabled={username.length === 0} onClick={handleSubmitUsername}>Submit</button>
-      </>
-      }
+      {connectedToSocket ? (
+        <>
+          <p>Hi {username}!</p>
+          <button onClick={() => setPage("join-game")}>Join game</button>
+          <button onClick={handleCreateNewGame}>New game</button>
+        </>
+      ) : (
+        <>
+          <p>Enter your name:</p>
+          <input
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
+          />
+          <button
+            disabled={username.length === 0}
+            onClick={handleSubmitUsername}
+          >
+            Submit
+          </button>
+        </>
+      )}
     </>
   );
 }
