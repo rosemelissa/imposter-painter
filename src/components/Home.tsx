@@ -3,7 +3,7 @@ import { socket } from "../App";
 
 interface IHomeProps {
   setPage: React.Dispatch<
-    React.SetStateAction<"join-game" | "home" | "new-game" | "gameplay">
+    React.SetStateAction<"join-game" | "home" | "waiting-room" | "gameplay">
   >;
   username: string;
   setUsername: React.Dispatch<React.SetStateAction<string>>;
@@ -11,6 +11,7 @@ interface IHomeProps {
   setGeneratedID: React.Dispatch<React.SetStateAction<number>>;
   setRoomNumber: React.Dispatch<React.SetStateAction<number>>;
   setLoading: React.Dispatch<React.SetStateAction<boolean>>;
+  setHostID: React.Dispatch<React.SetStateAction<number>>;
 }
 
 export default function Home({
@@ -21,6 +22,7 @@ export default function Home({
   setGeneratedID,
   setRoomNumber,
   setLoading,
+  setHostID,
 }: IHomeProps): JSX.Element {
   const [connectedToSocket, setConnectedToSocket] = useState<boolean>(false);
 
@@ -32,8 +34,9 @@ export default function Home({
     });
     socket.on("new game created", (roomNumber) => {
       setRoomNumber(roomNumber);
+      setHostID(generatedID);
       setLoading(false);
-      setPage("gameplay");
+      setPage("waiting-room");
     });
     // return () => {
     //   socket.off("messages updated");
