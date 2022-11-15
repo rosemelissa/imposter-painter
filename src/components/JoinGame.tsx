@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { socket } from "../App";
+import { IGameInfo } from "../interfaces";
 
 interface IJoinGameProps {
   setLoading: React.Dispatch<React.SetStateAction<boolean>>;
@@ -7,17 +8,26 @@ interface IJoinGameProps {
   generatedID: number;
   setPage: React.Dispatch<React.SetStateAction<"waiting-room" | "join-game" | "home" | "gameplay">>;
   setRoomNumber: React.Dispatch<React.SetStateAction<number>>;
+  setGameInfo: React.Dispatch<React.SetStateAction<IGameInfo | null>>;
 }
 
-export default function JoinGame({ setLoading, username, generatedID, setPage, setRoomNumber }: IJoinGameProps): JSX.Element {
+export default function JoinGame({ setLoading, username, generatedID, setPage, setRoomNumber, setGameInfo }: IJoinGameProps): JSX.Element {
   const [roomNumberInput, setRoomNumberInput] = useState<string>("");
 
   useEffect(() => {
-    socket.on("successfully joined game", (roomNumber) => {
+    socket.on("successfully joined game", (roomNumber, hostUsername, hostGeneratedID, hostSocketID, players) => {
       setRoomNumber(roomNumber);
-      // setHostID(generatedID);
       setLoading(false);
       setPage("waiting-room");
+      setGameInfo({
+        roomNumber: roomNumber,
+        host: {
+          username: hostUsername,
+          generatedID: hostGeneratedID,
+          socketID: hostSocketID,
+        },
+        players,
+      })
     });
     socket.on("game full", () => {
       setLoading(false);

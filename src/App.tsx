@@ -6,6 +6,7 @@ import NewGame from "./components/NewGame";
 import Gameplay from "./components/Gameplay";
 import Loading from "./components/Loading";
 import WaitingRoom from "./components/WaitingRoom";
+import { IGameInfo } from "./interfaces";
 export const socket = io(
   "https://ImposterPainterSocketIORooms.rosemelissa.repl.co"
 );
@@ -18,7 +19,7 @@ function App(): JSX.Element {
   const [username, setUsername] = useState<string>("");
   const [generatedID, setGeneratedID] = useState<number>(0);
   const [roomNumber, setRoomNumber] = useState<number>(0);
-  const [hostID, setHostID] = useState<number>(0);
+  const [gameInfo, setGameInfo] = useState<IGameInfo|null>(null)
 
   return (
     <>
@@ -32,11 +33,11 @@ function App(): JSX.Element {
           setGeneratedID={setGeneratedID}
           setRoomNumber={setRoomNumber}
           setLoading={setLoading}
-          setHostID={setHostID}
+          setGameInfo={setGameInfo}
         />
       )}
-      {page === "join-game" && <JoinGame setLoading={setLoading} username={username} generatedID={generatedID} setPage={setPage} setRoomNumber={setRoomNumber} />}
-      {page === "waiting-room" && <WaitingRoom roomNumber={roomNumber} />}
+      {page === "join-game" && <JoinGame setLoading={setLoading} username={username} generatedID={generatedID} setPage={setPage} setRoomNumber={setRoomNumber} setGameInfo={setGameInfo} />}
+      {page === "waiting-room" && <WaitingRoom gameInfo={gameInfo} setGameInfo={setGameInfo} />}
       {page === "gameplay" && <Gameplay />}
     </>
   );

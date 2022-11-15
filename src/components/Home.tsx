@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { socket } from "../App";
+import { IGameInfo } from "../interfaces";
 
 interface IHomeProps {
   setPage: React.Dispatch<
@@ -11,7 +12,7 @@ interface IHomeProps {
   setGeneratedID: React.Dispatch<React.SetStateAction<number>>;
   setRoomNumber: React.Dispatch<React.SetStateAction<number>>;
   setLoading: React.Dispatch<React.SetStateAction<boolean>>;
-  setHostID: React.Dispatch<React.SetStateAction<number>>;
+  setGameInfo: React.Dispatch<React.SetStateAction<IGameInfo | null>>;
 }
 
 export default function Home({
@@ -22,7 +23,7 @@ export default function Home({
   setGeneratedID,
   setRoomNumber,
   setLoading,
-  setHostID,
+  setGameInfo,
 }: IHomeProps): JSX.Element {
   const [connectedToSocket, setConnectedToSocket] = useState<boolean>(false);
 
@@ -32,11 +33,19 @@ export default function Home({
       setConnectedToSocket(true);
       setLoading(false);
     });
-    socket.on("new game created", (roomNumber) => {
+    socket.on("new game created", (roomNumber, hostUsername, hostGeneratedID, hostSocketID, players) => {
       setRoomNumber(roomNumber);
-      setHostID(generatedID);
       setLoading(false);
       setPage("waiting-room");
+      setGameInfo({
+        roomNumber: roomNumber,
+        host: {
+          username: hostUsername,
+          generatedID: hostGeneratedID,
+          socketID: hostSocketID,
+        },
+        players,
+      })
     });
     // return () => {
     //   socket.off("messages updated");
