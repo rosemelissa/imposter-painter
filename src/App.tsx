@@ -14,11 +14,12 @@ function App(): JSX.Element {
   const [loading, setLoading] = useState<boolean>(false);
   const [username, setUsername] = useState<string>('');
   const [generatedID, setGeneratedID] = useState<number>(0);
+  const [roomNumber, setRoomNumber] = useState<number>(0);
   
   return (
     <>
       {loading && <Loading />}
-      {page === "home" && <Home setPage={setPage} username={username} setUsername={setUsername} generatedID={generatedID} setGeneratedID={setGeneratedID} setLoading={setLoading}/>}
+      {page === "home" && <Home setPage={setPage} username={username} setUsername={setUsername} generatedID={generatedID} setGeneratedID={setGeneratedID} setRoomNumber={setRoomNumber} setLoading={setLoading}/>}
       {page === "join-game" && <JoinGame setLoading={setLoading} />}
       {page === "new-game" && <NewGame setLoading={setLoading} />}
       {page === "gameplay" && <Gameplay />}

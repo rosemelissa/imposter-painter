@@ -9,10 +9,11 @@ interface IHomeProps {
   setUsername: React.Dispatch<React.SetStateAction<string>>;
   generatedID: number;
   setGeneratedID: React.Dispatch<React.SetStateAction<number>>;
+  setRoomNumber: React.Dispatch<React.SetStateAction<number>>;
   setLoading: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-export default function Home({ setPage, username, setUsername, generatedID, setGeneratedID, setLoading }: IHomeProps): JSX.Element {
+export default function Home({ setPage, username, setUsername, generatedID, setGeneratedID, setRoomNumber, setLoading }: IHomeProps): JSX.Element {
   const [connectedToSocket, setConnectedToSocket] = useState<boolean>(false);
 
   useEffect(() => {
@@ -20,6 +21,11 @@ export default function Home({ setPage, username, setUsername, generatedID, setG
       setGeneratedID(generatedID);
       setConnectedToSocket(true);
       setLoading(false);
+    });
+    socket.on("new game created", (roomNumber) => {
+      setRoomNumber(roomNumber);
+      setLoading(false);
+      setPage('gameplay')
     });
     // return () => {
     //   socket.off("messages updated");
@@ -31,6 +37,11 @@ export default function Home({ setPage, username, setUsername, generatedID, setG
     socket.emit("new user", username);
   }
 
+  const handleCreateNewGame = () => {
+    setLoading(true);
+    socket.emit("new game", username, generatedID)
+  }
+
   return (
     <>
       <h1>Home</h1>
@@ -38,7 +49,7 @@ export default function Home({ setPage, username, setUsername, generatedID, setG
       <>
       <p>Hi {username}!</p>
       <button onClick={() => setPage("join-game")}>Join game</button>
-      <button onClick={() => setPage("new-game")}>New game</button>
+      <button onClick={handleCreateNewGame}>New game</button>
       </>:
       <>
       <p>Enter your name:</p>
