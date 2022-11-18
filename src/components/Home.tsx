@@ -10,7 +10,6 @@ interface IHomeProps {
   setUsername: React.Dispatch<React.SetStateAction<string>>;
   generatedID: number;
   setGeneratedID: React.Dispatch<React.SetStateAction<number>>;
-  setRoomNumber: React.Dispatch<React.SetStateAction<number>>;
   setLoading: React.Dispatch<React.SetStateAction<boolean>>;
   setGameInfo: React.Dispatch<React.SetStateAction<IGameInfo | null>>;
 }
@@ -21,7 +20,6 @@ export default function Home({
   setUsername,
   generatedID,
   setGeneratedID,
-  setRoomNumber,
   setLoading,
   setGameInfo,
 }: IHomeProps): JSX.Element {
@@ -33,23 +31,26 @@ export default function Home({
       setConnectedToSocket(true);
       setLoading(false);
     });
-    socket.on("new game created", (roomNumber, hostUsername, hostGeneratedID, hostSocketID, players) => {
-      setRoomNumber(roomNumber);
-      setLoading(false);
-      setPage("waiting-room");
-      setGameInfo({
-        roomNumber: roomNumber,
-        host: {
-          username: hostUsername,
-          generatedID: hostGeneratedID,
-          socketID: hostSocketID,
-        },
-        players,
-      })
-    });
+    socket.on(
+      "new game created",
+      (roomNumber, hostUsername, hostGeneratedID, hostSocketID, players) => {
+        setLoading(false);
+        setPage("waiting-room");
+        setGameInfo({
+          roomNumber: roomNumber,
+          host: {
+            username: hostUsername,
+            generatedID: hostGeneratedID,
+            socketID: hostSocketID,
+          },
+          players,
+        });
+      }
+    );
     // return () => {
     //   socket.off("messages updated");
     // };
+    // eslint-disable-next-line
   }, []);
 
   const handleSubmitUsername = async () => {
